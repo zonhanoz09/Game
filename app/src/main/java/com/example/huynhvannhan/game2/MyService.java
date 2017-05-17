@@ -22,7 +22,7 @@ public class MyService extends Service {
 
     public Socket mSocket;{
         try {
-            mSocket = IO.socket("http://192.168.1.19:3000");
+            mSocket = IO.socket("http://192.168.1.17:3000");
         } catch (URISyntaxException e) {}
     }
 

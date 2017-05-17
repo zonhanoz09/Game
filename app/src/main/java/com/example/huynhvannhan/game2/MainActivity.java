@@ -55,6 +55,9 @@ public class MainActivity extends AppCompatActivity{
                 if(position == 2) {
                     LayDanhSachBanBe(id);
                 }
+                if(position == 1) {
+                    LayThongTinUser();
+                }
             }
 
             @Override
@@ -79,7 +82,9 @@ public class MainActivity extends AppCompatActivity{
         }
         mm.mSocket.emit("client-lay-dsbanbe", tkmkdn);
     }
-
+    public void LayThongTinUser() {
+        mm.mSocket.emit("client-lay-thongtin-user","");
+    }
 
 
     public class SectionsPagerAdapter extends FragmentPagerAdapter {

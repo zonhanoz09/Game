@@ -6,8 +6,18 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.huynhvannhan.game2.MyService;
+import com.example.huynhvannhan.game2.Object.BanBe;
 import com.example.huynhvannhan.game2.R;
+import com.github.nkzawa.emitter.Emitter;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GameFragment extends Fragment {
     private static final String Ten = "param1";
@@ -17,8 +27,14 @@ public class GameFragment extends Fragment {
     private String ten;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private TextView tvgamecapdo,tvgameten,tvgamecup;
+    private Button btgamechien;
 
+    public MyService mm = new MyService();
+
+    private String socketid = "";
+
+    private OnFragmentInteractionListener mListener;
 
 
     public GameFragment() {
@@ -41,26 +57,61 @@ public class GameFragment extends Fragment {
             ten = getArguments().getString(Ten);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-
-        //Toast.makeText(getContext(), "aa "+ten, Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
 
+        View view = inflater.inflate(R.layout.fragment_game, container, false);
 
+        tvgameten = (TextView)view.findViewById(R.id.gameten);
+        tvgamecapdo = (TextView)view.findViewById(R.id.gamecapdo);
+        tvgamecup = (TextView)view.findViewById(R.id.gamecup);
+        btgamechien = (Button)view.findViewById(R.id.gamechien);
+
+        mm.mSocket.emit("client-lay-thongtin-user","");
+
+        mm.mSocket.on("server-gui-data-user",ThongTinUser);
+
+        btgamechien.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject thongtin = new JSONObject();
+                try {
+                    thongtin.put("socketid",socketid);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mm.mSocket.emit("client-gui-thongtin-chien",thongtin);
+            }
+        });
         
-        return inflater.inflate(R.layout.fragment_game, container, false);
+        return view;
     }
 
-    public void setUserVisibleHint(boolean isVisibleToUser)
-    {
-        if(isVisibleToUser){
+    private Emitter.Listener ThongTinUser = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
 
-        }else {
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONArray data = new JSONArray(args[0].toString());
+                        JSONObject tv = new JSONObject(data.get(0).toString());
 
+                        tvgameten.setText(tv.getString("username").toString());
+                        tvgamecup.setText(tv.getString("cup").toString());
+                        tvgamecapdo.setText(tv.getString("level").toString());
+                        socketid = tv.getString("socketid").toString();
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
         }
-    }
+    };
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

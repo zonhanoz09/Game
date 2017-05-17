@@ -119,8 +119,6 @@ public class BanBeFragment extends Fragment {
                 i.putExtra("ten",ten);
                 i.putExtra("id",id1);
                 startActivity(i);
-
-
             }
         });
         btb.setOnClickListener(new View.OnClickListener() {

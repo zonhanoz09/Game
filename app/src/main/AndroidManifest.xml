@@ -14,7 +14,7 @@
 
         <activity
             android:name=".MainActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".DangNhapActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -23,7 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".DangKyActivity" />
-        <activity android:name=".ActivityChat"></activity>
+        <activity android:name=".ActivityChat" />
+        <activity android:name=".PhongGameActivity"></activity>
     </application>
 
 </manifest>

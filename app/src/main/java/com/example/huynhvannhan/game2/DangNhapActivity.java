@@ -78,7 +78,6 @@ public class DangNhapActivity extends AppCompatActivity {
                              } else {
                                 i.putExtra("id", noidung);
                                 ketquadangnhap = true;
-                                 mm.setId(noidung);
                                 startActivity(i);
                              }
                         }
