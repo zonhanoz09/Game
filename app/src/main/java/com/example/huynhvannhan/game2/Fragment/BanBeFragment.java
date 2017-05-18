@@ -22,6 +22,7 @@ import com.example.huynhvannhan.game2.ActivityChat;
 import com.example.huynhvannhan.game2.Adapter.DanhSachBanBeAdapter;
 import com.example.huynhvannhan.game2.MyService;
 import com.example.huynhvannhan.game2.Object.BanBe;
+import com.example.huynhvannhan.game2.PhongGameActivity;
 import com.example.huynhvannhan.game2.R;
 import com.github.nkzawa.emitter.Emitter;
 
@@ -99,17 +100,25 @@ public class BanBeFragment extends Fragment {
         dialog.setTitle("Thông báo");
         dialog.setCanceledOnTouchOutside(false);
 
-        Button bta = (Button)dialog.findViewById(R.id.bta);
-        Button btb = (Button)dialog.findViewById(R.id.btb);
+        final Button bta = (Button)dialog.findViewById(R.id.bta);
+        final Button btb = (Button)dialog.findViewById(R.id.btb);
 
 
         lvbanbe.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                if(dsbanbe.get(position).isOnline())
+                {
+                    btb.setEnabled(true);
+                }
+                else {
+                    btb.setEnabled(false);
+                }
+
                 dialog.show();
                 ten = dsbanbe.get(position).getTen().toString();
                 id1 = dsbanbe.get(position).getId().toString();
-
             }
         });
         bta.setOnClickListener(new View.OnClickListener() {
@@ -124,7 +133,11 @@ public class BanBeFragment extends Fragment {
         btb.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(getActivity(), "bbbb", Toast.LENGTH_SHORT).show();
+                Intent i = new Intent(getActivity(),PhongGameActivity.class);
+                i.putExtra("ten",ten);
+                i.putExtra("id",id1);
+                startActivity(i);
+
             }
         });
 

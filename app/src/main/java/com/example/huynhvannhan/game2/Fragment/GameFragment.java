@@ -1,5 +1,6 @@
 package com.example.huynhvannhan.game2.Fragment;
 
+import android.app.Dialog;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -34,6 +35,8 @@ public class GameFragment extends Fragment {
 
     private String socketid = "";
 
+    Dialog dialog;
+
     private OnFragmentInteractionListener mListener;
 
 
@@ -57,6 +60,9 @@ public class GameFragment extends Fragment {
             ten = getArguments().getString(Ten);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        dialog = new Dialog(getActivity());
+        dialog.setContentView(R.layout.xmldialogframentbanbe);
+        dialog.setTitle("Thông báo");
     }
 
     @Override
@@ -112,6 +118,7 @@ public class GameFragment extends Fragment {
             });
         }
     };
+
 
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name

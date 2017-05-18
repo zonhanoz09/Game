@@ -1,5 +1,6 @@
 package com.example.huynhvannhan.game2;
 
+import android.app.Dialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,11 +9,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
 import com.example.huynhvannhan.game2.Fragment.BanBeFragment;
 import com.example.huynhvannhan.game2.Fragment.GameFragment;
 import com.example.huynhvannhan.game2.Fragment.ShopFragment;
+import com.example.huynhvannhan.game2.Object.BanBe;
+import com.github.nkzawa.emitter.Emitter;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -25,7 +33,14 @@ public class MainActivity extends AppCompatActivity{
     private ViewPager mViewPager;
     MyService mm = new MyService();
     private String id,username;
-    private ArrayList<String> dsbanbe= new ArrayList<>();
+    private String usernamedt;
+
+    Button bta,btb;
+
+    Dialog dialog;
+
+    public MainActivity() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +49,39 @@ public class MainActivity extends AppCompatActivity{
         Intent intent = getIntent();
         username = intent.getStringExtra("username");
         id = intent.getStringExtra("id");
+
+
+        mm.mSocket.on("server-gui-tengiaohuu",ThongTinChien);
+
+        Toast.makeText(getApplication(), "abcc", Toast.LENGTH_SHORT).show();
+        dialog = new Dialog(this);
+        dialog.setContentView(R.layout.xmldialogdongy);
+        dialog.setTitle("Thông báo");
+        dialog.setCanceledOnTouchOutside(false);
+
+        bta = (Button)dialog.findViewById(R.id.bta);
+        btb = (Button)dialog.findViewById(R.id.btb);
+
+        bta.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                JSONObject tk = new JSONObject();
+                try {
+                    tk.put("ten",usernamedt);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mm.mSocket.emit("client-dongy-giaohuu",tk);
+                Intent i = new Intent(MainActivity.this,PhongGameActivity.class);
+                startActivity(i);
+            }
+        });
+        btb.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialog.cancel();
+            }
+        });
 
         mSectionsPagerAdapter = new SectionsPagerAdapter(getSupportFragmentManager());
 
@@ -86,7 +134,6 @@ public class MainActivity extends AppCompatActivity{
         mm.mSocket.emit("client-lay-thongtin-user","");
     }
 
-
     public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
         public SectionsPagerAdapter(FragmentManager fm) {
@@ -129,7 +176,24 @@ public class MainActivity extends AppCompatActivity{
         }
 
     }
-
+    private Emitter.Listener ThongTinChien = new Emitter.Listener() {
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        JSONObject data = new JSONObject(args[0].toString());
+                        usernamedt = data.getString("Ten").toString();
+                        Toast.makeText(getApplication(), ""+usernamedt, Toast.LENGTH_SHORT).show();
+                        dialog.show();
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            });
+        }
+    };
     @Override
     protected void onDestroy() {
         super.onDestroy();

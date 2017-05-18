@@ -4,10 +4,13 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
+import android.widget.Toast;
 
+import com.github.nkzawa.emitter.Emitter;
 import com.github.nkzawa.socketio.client.IO;
 import com.github.nkzawa.socketio.client.Socket;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -22,7 +25,7 @@ public class MyService extends Service {
 
     public Socket mSocket;{
         try {
-            mSocket = IO.socket("http://192.168.1.17:3000");
+            mSocket = IO.socket("http://192.168.1.10:3000");
         } catch (URISyntaxException e) {}
     }
 
@@ -53,6 +56,7 @@ public class MyService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         return super.onStartCommand(intent, flags, startId);
+
     }
     @Override
     public void onCreate() {
@@ -70,7 +74,6 @@ public class MyService extends Service {
         }
         mSocket.emit("client-gui-dangnhap", tkmkdn);
     }
-
 
     @Override
     public void onDestroy() {
