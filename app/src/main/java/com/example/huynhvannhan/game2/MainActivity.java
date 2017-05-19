@@ -53,7 +53,6 @@ public class MainActivity extends AppCompatActivity{
 
         mm.mSocket.on("server-gui-tengiaohuu",ThongTinChien);
 
-        Toast.makeText(getApplication(), "abcc", Toast.LENGTH_SHORT).show();
         dialog = new Dialog(this);
         dialog.setContentView(R.layout.xmldialogdongy);
         dialog.setTitle("Thông báo");
@@ -185,7 +184,6 @@ public class MainActivity extends AppCompatActivity{
                     try {
                         JSONObject data = new JSONObject(args[0].toString());
                         usernamedt = data.getString("Ten").toString();
-                        Toast.makeText(getApplication(), ""+usernamedt, Toast.LENGTH_SHORT).show();
                         dialog.show();
                     } catch (JSONException e) {
                         e.printStackTrace();
