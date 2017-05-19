@@ -136,6 +136,15 @@ public class BanBeFragment extends Fragment {
                 Intent i = new Intent(getActivity(),PhongGameActivity.class);
                 i.putExtra("ten",ten);
                 i.putExtra("id",id1);
+
+                JSONObject tk = new JSONObject();
+                try {
+                    tk.put("Ten",ten);
+                    tk.put("ID",id1);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                mm.mSocket.emit("client-gui-tk-giaohuu",tk);
                 startActivity(i);
 
             }
